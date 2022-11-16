@@ -9,7 +9,7 @@ The file also has the ability to run in three different Modes: AA, SA, and BOTH.
 
 In all cases, the assumption is that you be running the locust file twice, once in each geography.  Running in the BOTH mode, the architecture looks like the diagram below.
 
-![sorted-sets-aa-va-sa-both-mode image](./resources/images/sorted-sets-aa-va-sa-both-mode.png)
+![sorted-sets-aa-va-sa-both-mode image](resources/images/sorted-sets-aa-va-sa-both-mode.png)
 
 
 
