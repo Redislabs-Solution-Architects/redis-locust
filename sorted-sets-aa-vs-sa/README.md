@@ -8,6 +8,7 @@ This locustfile leverages the locust.io framework to make direct calls to Redis,
 The file also has the ability to run in three different Modes: AA, SA, and BOTH.  This modes represent running against an active-active Redis Enterprise database.  All reads and writes will happen to the single database defined in the input parameters.  SA mode is stand-alone.  In this mode, the test harness is responsible for writing data to two sperate stand-alone databases.  This simulates using application code to manage writes to different geographies.  (This setup obviously does not provide the same consistency guarantees as active-active, but may be approriate for some use cases.)  This final mode, BOTH, runs the same transactions agianst active-active Redis and a pair of stand-alone databases.
 
 In all cases, the assumption is that you be running the locust file twice, once in each geography.  Running in the BOTH mode, the architecture looks like the diagram below.
+
 ![sorted-sets-aa-va-sa-both-mode](resources/images/sorted-sets-aa-vs-sa-both-mode.png)
 
 ## Parameters
