@@ -24,32 +24,32 @@ machines = [
     {'server': "tboyd-locust-worker-001.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     },
     {'server': "tboyd-locust-worker-002.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     },
     {'server': "tboyd-locust-worker-003.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     },
     {'server': "tboyd-locust-worker-004.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     },
     {'server': "tboyd-locust-worker-005.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     },
     {'server': "tboyd-locust-worker-006.redisdemo.com",
      'user': 'ubuntu',
      'master': False,
-     'workers': 24
+     'workers': 48
     }
     ]
 

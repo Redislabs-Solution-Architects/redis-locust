@@ -205,18 +205,22 @@ class RedisUser(User):
     def on_start(self):
         self.myDataLayer = DataLayer(self.environment)
 
-    @task(100)
+#    @task(32)
+    @task(0)
     def getkey(self):
         self.myDataLayer.getkey(myRedis)
 
+#    @task(8)
     @task(25)
     def setkey(self):
         self.myDataLayer.setkey(myRedis)
 
-    @task(4)
+#    @task(4)
+    @task(0)
     def getkey_pipeline(self):
         self.myDataLayer.getkey_pipeline(myRedis)
 
+#    @task(1)
     @task(1)
     def setkey_pipeline(self):
         self.myDataLayer.setkey_pipeline(myRedis)
@@ -272,7 +276,7 @@ def on_test_start(environment, **kwargs):
             environment.parsed_options.key_name_length,
             environment.parsed_options.value_min_chars,
             environment.parsed_options.value_max_chars,
-            mode='RANDOM',
+            mode='SEQ_PER_WORKER_AND_EXIT',
             workerNum=int(os.environ['RED_LOCUST_WORKER_NUMBER']),
             totalWorkers=int(os.environ['RED_LOCUST_WORKERS_TOTAL']))
         keysOnly = generateKeyOnly(
@@ -280,6 +284,6 @@ def on_test_start(environment, **kwargs):
             environment.parsed_options.number_of_keys,
             environment.parsed_options.key_name_prefix,
             environment.parsed_options.key_name_length,
-            mode='RANDOM',
+            mode='SEQ_PER_WORKER_AND_EXIT',
             workerNum=int(os.environ['RED_LOCUST_WORKER_NUMBER']),
             totalWorkers=int(os.environ['RED_LOCUST_WORKERS_TOTAL']))
