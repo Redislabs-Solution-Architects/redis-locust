@@ -1,5 +1,8 @@
+<h3 style="color:red">Note: This file currently uses the deprecated request_failure and request_success calls and will not work in Locust 2.15+</h3>
+
+<h3 style="color:red">Note: This approach of simultaneously testing both systems is a bit off, and not really a best practice</h3>
+
 # sorted-sets-aa-vs-sa
-Collection of locustfiles and utilities for using locust.io to test Redis
 
 ## Overview
 This locustfile leverages the locust.io framework to make direct calls to Redis, rather than relying on a REST API server.  This is done to reduce complexity, increase the load that can be generated for a given machine, and to allow recording of response times directly from Redis.
