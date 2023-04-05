@@ -1,0 +1,16 @@
+#
+# Server details for launching of locust processes, either on localhost
+# or on remote server accessed via ssh with a keyfile
+#
+private-key-location: "~/.ssh/mykey.pem"
+user: "ubuntu"
+workers-per-server: 2
+locust-master :
+  #  ext-fqdn: "tboyd-locust-master.redisdemo.com"
+  ext-fqdn: "localhost"
+  int-fqdn: "intr-tboyd-locust-master.redisdemo.com"
+locust-workers-ext-fqdn:
+  - localhost
+  - localhost
+#  - "tboyd-locust-worker-001.redisdemo.com"
+#  - "tboyd-locust-worker-002.redisdemo.com"

@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+import argparse
+import yaml
+import signal
+import sys
+import subprocess
+import os
+from pprint import pprint
+
+argParser = argparse.ArgumentParser(epilog="This utility launches a locust master and locust workers, based on the provide config file and locust file.")
+argParser.add_argument("locustfile")
+argParser.add_argument("-f", "--file", type=str, default="locust-launch-config.yaml", help="config file")
+
+args = argParser.parse_args()
+
+processes = []
+total_workers = 0
+current_worker = 0
+
+def signal_handler(sig, frame):
+    print('Signal handling: terminating child processes')
+    for p in processes:
+      p.send_signal(sig)
+    sys.exit()
+
+signal.signal(signal.SIGINT, signal_handler)
+
+with open("locust-launch-config.yaml", "r") as file:
+    configData = yaml.load(file, Loader=yaml.FullLoader)
+    pprint(configData)
+
+if (configData['locust-master'] ['ext-fqdn'] == "localhost"):
+    p1 = subprocess.Popen(['locust', '--master', '--class-picker', '-f', args.locustfile])
+else:
+    p0 = subprocess.run(['scp', "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeychecking=no", args.locustfile, configData['user']+"@"+configData['locust-master']['ext-fqdn'] + ":" + "locustfile.py"])
+    p1 = subprocess.Popen(['ssh', "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeychecking=no", configData['user']+"@"+configData['locust-master']['ext-fqdn'], "locust --master --class-picker -f " + "locustfile.py"])
+
+processes.append(p1)
+
+# TODO: make this more pythonic
+for i in configData['locust-workers-ext-fqdn']:
+    total_workers = total_workers + configData['workers-per-server']
+
+my_env = os.environ
+my_env["RED_LOCUST_WORKERS_TOTAL"] = str(total_workers)
+
+for i in configData['locust-workers-ext-fqdn']:
+    if i != "localhost":
+        p0 = subprocess.run(['scp', "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeychecking=no", args.locustfile, configData['user']+"@"+i + ":locustfile.py"])
+    for j in range(configData['workers-per-server']):
+        current_worker = current_worker+1
+        my_env["RED_LOCUST_WORKER_NUMBER"] = str(current_worker)
+        if (i == "localhost"):
+            p2 = subprocess.Popen(['locust', '--worker', '-f', args.locustfile], env=my_env)
+        else:
+            p2 = subprocess.Popen(['ssh', "-o UserKnownHostsFile=/dev/null", "-o StrictHostKeychecking=no",\
+                configData['user']+"@"+i, \
+                "export RED_LOCUST_WORKERS_TOTAL=" + str(total_workers)+";" + \
+                "export RED_LOCUST_WORKER_NUMBER=" + str(current_worker) + ";" + \
+                "locust --worker --master-host " + configData['locust-master']['int-fqdn'] + " -f " + "locustfile.py"])
+        processes.append(p2)
+
+exit_codes = [p.wait() for p in processes]
